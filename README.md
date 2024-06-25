@@ -17,115 +17,69 @@ LFR-Line Following Robot
 /*Run this code in arduino ide*/
 
 
+## Code
+
+```cpp
+// Line Following Robot Code
+const int leftSensor = 2; // left sensor connected to digital pin 2
+const int rightSensor = 3; // right sensor connected to digital pin 3
+const int leftMotorForward = 9; // left motor forward pin
+const int leftMotorBackward = 10; // left motor backward pin
+const int rightMotorForward = 5; // right motor forward pin
+const int rightMotorBackward = 6; // right motor backward pin
 
 void setup() {
-  // put your setup code here, to run once:
-//  Motor driver
-pinMode(10,OUTPUT); //left motor
-pinMode(11,OUTPUT); //left motor
-pinMode(12,OUTPUT); //right motor
-pinMode(13,OUTPUT); //right motor
-pinMode(8,OUTPUT); //enable1
-pinMode(9,OUTPUT); //enable2
-pinMode(2,OUTPUT);
-digitalWrite(2,HIGH);
-digitalWrite(8,HIGH);
-digitalWrite(9,HIGH);
-//left sensor
-pinMode(3,OUTPUT);
-pinMode(4,OUTPUT);
-pinMode(5,INPUT);
-//mid sensor
-pinMode(6,INPUT);
-//right sensor
-pinMode(7,INPUT);
-
-digitalWrite(4,LOW);
-digitalWrite(3,HIGH);
-
-
-
-Serial.begin(9600);
+  pinMode(leftSensor, INPUT);
+  pinMode(rightSensor, INPUT);
+  pinMode(leftMotorForward, OUTPUT);
+  pinMode(leftMotorBackward, OUTPUT);
+  pinMode(rightMotorForward, OUTPUT);
+  pinMode(rightMotorBackward, OUTPUT);
 }
- void forward()
-{
-  digitalWrite(10,HIGH);
-  digitalWrite(11,LOW);
-  digitalWrite(12,HIGH);
-  digitalWrite(13,LOW);
-  }
-  
-
-void left()
-{
-  digitalWrite(10,LOW);
-  digitalWrite(11,LOW);
-  digitalWrite(12,HIGH);
-  digitalWrite(13,LOW);
-  }
-  void right()
-{
-  digitalWrite(10,HIGH);
-  digitalWrite(11,LOW);
-  digitalWrite(12,LOW);
-  digitalWrite(13,LOW);
-  }
-
-   void steepleft()
-{
-  digitalWrite(10,LOW);
-  digitalWrite(11,HIGH);
-  digitalWrite(12,HIGH);
-  digitalWrite(13,LOW);
-  }
-  
-
-   void steepright()
-{
-  digitalWrite(10,HIGH);
-  digitalWrite(11,LOW);
-  digitalWrite(12,LOW);
-  digitalWrite(13,HIGH);
-  }
 
 void loop() {
-  // put your main code here, to run repeatedly:
-  //black==1&&white==0
- int lir=digitalRead(5);
-  int cir=digitalRead(6);
-    int rir=digitalRead(7);
-  
-  Serial.println(lir);
-  Serial.println(cir);
-  Serial.println(rir);
-   if((lir==0&&cir==1&&rir==0)||(lir==1&&cir==1&&rir==1))
-   {  
-    forward(); 
-     
-    }
-   if(lir==1&&cir==1&&rir==0)
-   {
-    steepleft();
-    } 
-    if(lir==0&&cir==0&&rir==0)
-   {
-    forward();
-    
-    }
-   if(lir==0&&cir==1&&rir==1)
-   {
-    steepright();
-    } 
-   if(lir==1&&cir==0&&rir==0)
-   { 
-    steepleft(); 
-    }
-   if(lir==0&&cir==0&&rir==1)
-   { 
-    steepright(); 
-    }
-    if(lir==1&&cir==0&&rir==1)
-    {
-      steepright();
-      }
+  int leftValue = digitalRead(leftSensor);
+  int rightValue = digitalRead(rightSensor);
+
+  if (leftValue == LOW && rightValue == LOW) {
+    // Move forward
+    moveForward();
+  } else if (leftValue == LOW && rightValue == HIGH) {
+    // Turn right
+    turnRight();
+  } else if (leftValue == HIGH && rightValue == LOW) {
+    // Turn left
+    turnLeft();
+  } else {
+    // Stop
+    stop();
+  }
+}
+
+void moveForward() {
+  digitalWrite(leftMotorForward, HIGH);
+  digitalWrite(leftMotorBackward, LOW);
+  digitalWrite(rightMotorForward, HIGH);
+  digitalWrite(rightMotorBackward, LOW);
+}
+
+void turnRight() {
+  digitalWrite(leftMotorForward, HIGH);
+  digitalWrite(leftMotorBackward, LOW);
+  digitalWrite(rightMotorForward, LOW);
+  digitalWrite(rightMotorBackward, HIGH);
+}
+
+void turnLeft() {
+  digitalWrite(leftMotorForward, LOW);
+  digitalWrite(leftMotorBackward, HIGH);
+  digitalWrite(rightMotorForward, HIGH);
+  digitalWrite(rightMotorBackward, LOW);
+}
+
+void stop() {
+  digitalWrite(leftMotorForward, LOW);
+  digitalWrite(leftMotorBackward, LOW);
+  digitalWrite(rightMotorForward, LOW);
+  digitalWrite(rightMotorBackward, LOW);
 }
